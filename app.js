@@ -11,7 +11,7 @@ const dbPath = path.join(__dirname,"userdata.db")
 
 let db = null;
 app.use(bodyParser.json());
-
+app.use(cors());
 
 
 const initializeTheDbAndServer = async () => {
