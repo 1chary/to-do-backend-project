@@ -5,8 +5,6 @@ const { open } = require("sqlite")
 const sqlite3 = require("sqlite3")
 const bodyParser = require("body-parser")
 const jwt = require("jsonwebtoken")
-const { v4: uuidv4 } = require('uuid')
-const uniqueId = uuidv4();
 
 
 const dbPath = path.join(__dirname,"userdata.db")
@@ -170,5 +168,19 @@ app.post("/newToDo/:name",async(request,response) => {
     await db.run(addToDo)
     response.send("New To Do Added Successfully")
 })
+
+// delete a to do
+app.delete("/delete/todo/:todoId",async(request,response) => {
+    const {todoId} = request.params
+    const deleteToDo = `
+        DELETE FROM 
+            to_do_table
+        WHERE
+            to_do_id = ${todoId}
+    `;
+    await db.run(deleteToDo)
+    response.send("To Do Deleted Successfully")
+})
+
 
 initializeTheDbAndServer()

@@ -46,3 +46,7 @@ Content-Type: application/json
     "description": "Learn Java",
     "status": "pending"
 }
+
+### deleting a specific to do 
+
+DELETE http://localhost:3002/delete/todo/4
