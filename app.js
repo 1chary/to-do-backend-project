@@ -89,4 +89,31 @@ app.post("/login",async(request,response) => {
     }
 })
 
+// change user name code logic 
+
+app.put("/changeUsername", async(request,response) => {
+    const {name,newUsername} = request.body
+    const checkUser = `
+        select *
+        from user_details
+        where name = '${name}'
+    `;
+    const queryResults = await db.get(checkUser)
+    if (queryResults !== undefined) {
+        const updateUsername = `
+        update user_details
+        set name = '${newUsername}'
+        where name = '${name}'
+    `;
+    await db.run(updateUsername)
+    response.send("Username updated successfully")
+    }
+    else {
+        response.status = 400;
+        response.send("Username not in records")
+    }
+})
+
+// 
+
 initializeTheDbAndServer()
