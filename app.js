@@ -37,20 +37,24 @@ const initializeTheDbAndServer = async () => {
 app.post("/signIn", async(request,response) => {
     const {user_id,name,email,password} = request.body;
     const checkUsernameAvailability = `
-    SELECT name
-    FROM user_details
-    WHERE name = '${name}';
+    SELECT 
+        name
+    FROM 
+        user_details
+    WHERE 
+        name = '${name}';
     `;
     const queryResults = await db.get(checkUsernameAvailability);
     if (queryResults === undefined) {
         const addNewUser = `
-        INSERT INTO user_details(user_id,name,email,password)
-        values (
+        INSERT INTO 
+            user_details(user_id,name,email,password)
+        VALUES (
             ${user_id},
             '${name}',
             '${email}',
             '${password}'
-    )`;
+        )`;
         await db.run(addNewUser)
         response.send("New User Added")
 
@@ -68,9 +72,12 @@ app.post("/login",async(request,response) => {
     const {name,password} = request.body;
     console.log(name)
     const checkUserAvailability = `
-        select *
-        from user_details
-        where name = '${name}'
+        SELECT 
+            *
+        FROM 
+            user_details
+        WHERE
+            name = '${name}'
     `;
     const queryResult = await db.get(checkUserAvailability);
     if (queryResult === undefined) {
@@ -121,13 +128,13 @@ app.put("/updateProfileDetails", authenticateToken, async(request,response) => {
     const {name} = request.query
     const {newUsername,email,password} = request.body;
     const updateUserDetails = `
-        update 
+        UPDATE 
             user_details
-        set 
+        SET 
             name ='${newUsername}',
             email='${email}',
             password='${password}'
-        where 
+        WHERE
             name = '${name}'
     `;
     await db.run(updateUserDetails)
@@ -139,18 +146,18 @@ app.put("/updateProfileDetails", authenticateToken, async(request,response) => {
 app.get("/todo/list/:name",async(request,response) => {
     const {name} = request.params;
     const getAllTheToDos = `
-        select 
+        SELECT 
             *
-        from 
+        FROM
             to_do_table
-        where
+        WHERE
             name = '${name}';
     `;
     const queryResult = await db.all(getAllTheToDos)
     response.send(queryResult)
 })
 
-// create a new to do
+// create a new todo
 
 app.post("/newToDo/:name",async(request,response) => {
     const {name} = request.params;
@@ -167,6 +174,24 @@ app.post("/newToDo/:name",async(request,response) => {
     `;
     await db.run(addToDo)
     response.send("New To Do Added Successfully")
+})
+
+// update todo 
+
+app.put("/updateToDo/:todoId", async(request,response) => {
+    const {todoId} = request.params;
+    const {description,status} = request.body;
+    const updateToDo = `
+        UPDATE 
+            to_do_table
+        SET 
+            description = '${description}',
+            status = '${status}'
+        WHERE 
+            to_do_id = ${todoId}
+    `;
+    await db.run(updateToDo);
+    response.send("To do upated successfully");
 })
 
 // delete a to do

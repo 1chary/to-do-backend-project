@@ -47,6 +47,17 @@ Content-Type: application/json
     "status": "pending"
 }
 
+### updating todo 
+
+PUT http://localhost:3002/updateToDo/3
+Content-Type: application/json
+
+{
+    "description": "Learn HTML",
+    "status": "Completed"
+}
+
+
 ### deleting a specific to do 
 
 DELETE http://localhost:3002/delete/todo/4
