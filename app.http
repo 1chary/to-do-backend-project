@@ -31,3 +31,18 @@ Content-Type: application/json
     "email":"hariKrishna123@gmail.com",
     "password": "hariKrishna123"
 }
+
+### get to do list 
+
+GET http://localhost:3002/todo/list/hari
+
+### create a to do and post in the table 
+
+POST http://localhost:3002/newToDo/ram 
+Content-Type: application/json
+
+{
+    "to_do_id": "9",
+    "description": "Learn Java",
+    "status": "pending"
+}

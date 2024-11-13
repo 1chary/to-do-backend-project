@@ -5,11 +5,16 @@ const { open } = require("sqlite")
 const sqlite3 = require("sqlite3")
 const bodyParser = require("body-parser")
 const jwt = require("jsonwebtoken")
+const { v4: uuidv4 } = require('uuid')
+const uniqueId = uuidv4();
+
 
 const dbPath = path.join(__dirname,"userdata.db")
 
 let db = null;
 app.use(bodyParser.json());
+
+
 
 const initializeTheDbAndServer = async () => {
     try {
@@ -131,5 +136,39 @@ app.put("/updateProfileDetails", authenticateToken, async(request,response) => {
     response.send("user details updated successfully")
 })
 
+// get the all the list of todo's of specific user
+
+app.get("/todo/list/:name",async(request,response) => {
+    const {name} = request.params;
+    const getAllTheToDos = `
+        select 
+            *
+        from 
+            to_do_table
+        where
+            name = '${name}';
+    `;
+    const queryResult = await db.all(getAllTheToDos)
+    response.send(queryResult)
+})
+
+// create a new to do
+
+app.post("/newToDo/:name",async(request,response) => {
+    const {name} = request.params;
+    const {to_do_id,description,status} = request.body
+    const addToDo = `
+        INSERT INTO 
+            to_do_table(to_do_id,description,status,name)
+        VALUES (
+            ${to_do_id},
+            '${description}',
+            '${status}',
+            '${name}'
+        )
+    `;
+    await db.run(addToDo)
+    response.send("New To Do Added Successfully")
+})
 
 initializeTheDbAndServer()
