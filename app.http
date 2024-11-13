@@ -21,11 +21,13 @@ Content-Type: application/json
     "password":"hari123"
 }
 
-### change username api
-PUT http://localhost:3002/changeUsername
+### change profile details api
+PUT http://localhost:3002/updateProfileDetails/?name="hari"
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiJHtuYW1lfSIsImlhdCI6MTczMTQ3MjgxNH0.-yeKiMon-XnPqmAOeIfE6fb0IabwvBTfNxchCrjo9kQ
 Content-Type: application/json 
 
 {   
-    "name": "zane",
-    "newUsername": "krishna"
+    "newUsername": "hariKrishna",
+    "email":"hariKrishna123@gmail.com",
+    "password": "hariKrishna123"
 }

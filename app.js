@@ -89,31 +89,47 @@ app.post("/login",async(request,response) => {
     }
 })
 
-// change user name code logic 
+// middle ware function logic 
+const authenticateToken = (request, response, next) => {
+  let jwtToken;
+  const authHeader = request.headers["authorization"];
+  if (authHeader !== undefined) {
+    jwtToken = authHeader.split(" ")[1];
+  }
+  if (jwtToken === undefined) {
+    response.status(401);
+    response.send("Invalid Access Token");
+  } else {
+    jwt.verify(jwtToken, "my_token", async (error, payload) => {
+      if (error) {
+        response.status(401);
+        response.send("Invalid Jwt Token");
+      } else {
+        request.name = payload.name;
+        next();
+      }
+    });
+  }
+};
 
-app.put("/changeUsername", async(request,response) => {
-    const {name,newUsername} = request.body
-    const checkUser = `
-        select *
-        from user_details
-        where name = '${name}'
+// change profile details code logic 
+
+app.put("/updateProfileDetails", authenticateToken, async(request,response) => {
+    const {name} = request.query
+    const {newUsername,email,password} = request.body;
+    const updateUserDetails = `
+        update 
+            user_details
+        set 
+            name ='${newUsername}',
+            email='${email}',
+            password='${password}'
+        where 
+            name = '${name}'
     `;
-    const queryResults = await db.get(checkUser)
-    if (queryResults !== undefined) {
-        const updateUsername = `
-        update user_details
-        set name = '${newUsername}'
-        where name = '${name}'
-    `;
-    await db.run(updateUsername)
-    response.send("Username updated successfully")
-    }
-    else {
-        response.status = 400;
-        response.send("Username not in records")
-    }
+    await db.run(updateUserDetails)
+    response.send("user details updated successfully")
 })
 
-// 
 
 initializeTheDbAndServer()
