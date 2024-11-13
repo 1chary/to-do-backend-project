@@ -28,13 +28,34 @@ const initializeTheDbAndServer = async () => {
 }
 
 
-app.get("/check",async (request,response) => {
-    const result = `
-        select *
-        from user_details
+
+// sign in user code logic 
+
+app.post("/signIn", async(request,response) => {
+    const {user_id,name,email,password} = request.body;
+    const checkUsernameAvailability = `
+    SELECT name
+    FROM user_details
+    WHERE name = '${name}';
     `;
-    const run = await db.all(result)
-    response.send(run)
+    const queryResults = await db.get(checkUsernameAvailability);
+    if (queryResults === undefined) {
+        const addNewUser = `
+        INSERT INTO user_details(user_id,name,email,password)
+        values (
+            ${user_id},
+            '${name}',
+            '${email}',
+            '${password}'
+    )`;
+        await db.run(addNewUser)
+        response.send("New User Added")
+
+    }
+    else {
+        response.status(400);
+        response.send("user already exists");
+    }
 })
 
 

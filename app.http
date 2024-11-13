@@ -1,9 +1,17 @@
 
+### sign in api
 
-### 
-GET http://localhost:3002/check
+POST http://localhost:3002/signIn
+Content-Type: application/json
 
-### Log in Api
+{
+    "user_id": "6",
+    "name": "krish",
+    "email":"krish123@gmail.com",
+    "password": "krish123"
+}
+
+### Log in api
 
 POST http://localhost:3002/login
 Content-Type: application/json
